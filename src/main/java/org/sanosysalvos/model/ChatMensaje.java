@@ -26,6 +26,9 @@ public class ChatMensaje {
     @Column(name = "leido")
     private Boolean leido;
 
+    @Column(name = "potencial_estafa")
+    private Boolean potencialEstafa;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 }

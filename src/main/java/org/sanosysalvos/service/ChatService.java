@@ -19,6 +19,26 @@ public class ChatService {
     private final ChatConversacionRepository conversacionRepo;
     private final ChatMensajeRepository mensajeRepo;
 
+    private static final List<String> FRASES_ESTAFA = List.of(
+            "paga primero", "depositame", "transfiere primero", "adelanto",
+            "costo de envío", "tarifa", "envíame dinero", "pago por adelantado",
+            "dame tu clave", "código de verificación", "ingresa a este link",
+            "actualiza tus datos aquí", "premio", "ganaste", "exclusivo para ti"
+    );
+
+    private boolean detectarEstafa(String contenido) {
+        if (contenido == null || contenido.isEmpty()) {
+            return false;
+        }
+        String contenidoLowerCase = contenido.toLowerCase();
+        for (String frase : FRASES_ESTAFA) {
+            if (contenidoLowerCase.contains(frase)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Transactional
     public ConversacionDTO crearOObtenerConversacion(String emailActual, String emailOtro) {
         ChatConversacion conv = conversacionRepo.findByUsuarios(emailActual, emailOtro)
@@ -50,11 +70,14 @@ public class ChatService {
         conversacionRepo.findById(idConversacion)
                 .orElseThrow(() -> new RuntimeException("Conversación no encontrada"));
 
+        boolean esEstafa = detectarEstafa(contenido);
+
         ChatMensaje mensaje = ChatMensaje.builder()
                 .idConversacion(idConversacion)
                 .idRemitente(emailRemitente)
                 .contenido(contenido)
                 .leido(false)
+                .potencialEstafa(esEstafa)
                 .createdAt(LocalDateTime.now())
                 .build();
 
@@ -81,6 +104,6 @@ public class ChatService {
     }
 
     private MensajeDTO toMensajeDTO(ChatMensaje m, String emailActual) {
-        return new MensajeDTO(m.getIdMensaje(), m.getIdConversacion(), m.getIdRemitente(), m.getContenido(), m.getLeido(), m.getIdRemitente().equals(emailActual), m.getCreatedAt());
+        return new MensajeDTO(m.getIdMensaje(), m.getIdConversacion(), m.getIdRemitente(), m.getContenido(), m.getLeido(), m.getIdRemitente().equals(emailActual), m.getPotencialEstafa(), m.getCreatedAt());
     }
 }
