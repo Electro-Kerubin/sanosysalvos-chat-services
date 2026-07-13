@@ -23,7 +23,7 @@ public class ChatService {
             "paga primero", "depositame", "transfiere primero", "adelanto",
             "costo de envío", "tarifa", "envíame dinero", "pago por adelantado",
             "dame tu clave", "código de verificación", "ingresa a este link",
-            "actualiza tus datos aquí", "premio", "ganaste", "exclusivo para ti"
+            "actualiza tus datos aquí", "premio", "ganaste", "exclusivo para ti" , "bryan soto"
     );
 
     private boolean detectarEstafa(String contenido) {
