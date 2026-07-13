@@ -9,5 +9,6 @@ public record MensajeDTO(
         String contenido,
         Boolean leido,
         Boolean esPropio,
+        Boolean esPotencialEstafa,
         LocalDateTime createdAt
 ) {}
