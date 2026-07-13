@@ -26,6 +26,7 @@ class ChatServiceTest {
 
     @Mock private ChatConversacionRepository conversacionRepo;
     @Mock private ChatMensajeRepository mensajeRepo;
+    @Mock private ScamDetector scamDetector;
 
     @InjectMocks private ChatService chatService;
 
@@ -104,6 +105,30 @@ class ChatServiceTest {
         assertEquals(contenido, result.contenido());
         assertTrue(result.esPropio());
         assertFalse(result.leido());
+    }
+
+    @Test
+    void enviarMensaje_debeMarcarComoEstafa_cuandoContienePatronSospechoso() {
+        String contenido = "necesito que me mandes tu clave para confirmar";
+
+        when(conversacionRepo.findById(1L)).thenReturn(Optional.of(conversacion));
+        when(scamDetector.esEstafa(contenido)).thenReturn(true);
+
+        ChatMensaje mensajeGuardado = new ChatMensaje();
+        mensajeGuardado.setIdMensaje(2L);
+        mensajeGuardado.setIdConversacion(1L);
+        mensajeGuardado.setIdRemitente(emailUsuario1);
+        mensajeGuardado.setContenido(contenido);
+        mensajeGuardado.setLeido(false);
+        mensajeGuardado.setPotencialEstafa(true);
+        mensajeGuardado.setCreatedAt(LocalDateTime.now());
+
+        when(mensajeRepo.save(any())).thenReturn(mensajeGuardado);
+
+        MensajeDTO result = chatService.enviarMensaje(1L, emailUsuario1, contenido);
+
+        assertNotNull(result);
+        assertTrue(result.esPotencialEstafa());
     }
 
     @Test
