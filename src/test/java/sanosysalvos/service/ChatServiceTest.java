@@ -128,7 +128,7 @@ class ChatServiceTest {
         MensajeDTO result = chatService.enviarMensaje(1L, emailUsuario1, contenido);
 
         assertNotNull(result);
-        assertTrue(result.potencialEstafa());
+        assertTrue(result.esPotencialEstafa());
     }
 
     @Test
