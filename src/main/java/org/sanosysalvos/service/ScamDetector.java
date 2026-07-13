@@ -9,8 +9,6 @@ import java.util.regex.Pattern;
 @Component
 public class ScamDetector {
 
-    // Frases/patrones típicos de estafa en el contexto de mascotas perdidas.
-    // Se comparan en minúsculas y sin tildes.
     private static final List<Pattern> PATRONES = List.of(
             Pattern.compile("transfer\\w* (de )?dinero"),
             Pattern.compile("(pasa|manda|envia)me? (la )?plata"),
@@ -27,7 +25,7 @@ public class ScamDetector {
             Pattern.compile("solo acepto (transferencia|efectivo por adelantado)"),
             Pattern.compile("link de pago"),
             Pattern.compile("western union"),
-            Pattern.compile("mercado ?pago (urgente|ya)")
+            Pattern.compile("mercado ?pago (urgente|ya)"),
             Pattern.compile("brayan soto")
     );
 
@@ -38,8 +36,7 @@ public class ScamDetector {
     }
 
     private String normalizar(String texto) {
-        String sinTildes = Normalizer.normalize(texto.toLowerCase(), Normalizer.Form.NFD)
+        return Normalizer.normalize(texto.toLowerCase(), Normalizer.Form.NFD)
                 .replaceAll("\\p{M}", "");
-        return sinTildes;
     }
 }
