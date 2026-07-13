@@ -15,9 +15,9 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ChatService {
-
     private final ChatConversacionRepository conversacionRepo;
     private final ChatMensajeRepository mensajeRepo;
+    private final ScamDetector scamDetector;
 
     private static final List<String> FRASES_ESTAFA = List.of(
             "paga primero", "depositame", "transfiere primero", "adelanto",
@@ -70,7 +70,7 @@ public class ChatService {
         conversacionRepo.findById(idConversacion)
                 .orElseThrow(() -> new RuntimeException("Conversación no encontrada"));
 
-        boolean esEstafa = detectarEstafa(contenido);
+        boolean esEstafa = scamDetector.esEstafa(contenido);
 
         ChatMensaje mensaje = ChatMensaje.builder()
                 .idConversacion(idConversacion)
