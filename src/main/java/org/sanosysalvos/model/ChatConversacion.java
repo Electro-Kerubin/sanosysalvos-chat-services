@@ -7,9 +7,6 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "chat_conversacion")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
-@Builder.Default
-private Boolean esEstafa = false;
-
 public class ChatConversacion {
 
     @Id
